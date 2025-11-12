@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 class OrderModel {
@@ -14,6 +13,10 @@ class OrderModel {
   final String? pickupLocation;
   final String? deliveryLocation;
   final String? deliveryType;
+  
+  // NEW: Landmark fields
+  final String? pickupLandmark;
+  final String? deliveryLandmark;
   
   // Customer (Pickup Member) fields
   final String? customerName;
@@ -39,6 +42,10 @@ class OrderModel {
   
   // Images
   final List<String>? orderImages;
+  
+  // Status tracking fields
+  final int? invoiceStatusId;
+  final int? categoryId;
 
   OrderModel({
     required this.id,
@@ -50,6 +57,8 @@ class OrderModel {
     this.pickupLocation,
     this.deliveryLocation,
     this.deliveryType,
+    this.pickupLandmark,
+    this.deliveryLandmark,
     this.customerName,
     this.customerPhone,
     this.customerAddress,
@@ -65,22 +74,26 @@ class OrderModel {
     this.categoryName,
     this.totalAmount,
     this.orderImages,
+    this.invoiceStatusId,
+    this.categoryId,
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> json, IconData icon) {
-    // Extract pickup location (where order is picked up FROM)
+    // Extract pickup location
     final pickupLoc = json['picUpLocation'] as Map<String, dynamic>?;
     final pickupAddress = pickupLoc?['formattedAddress']?.toString() ?? 
                           pickupLoc?['landmark']?.toString() ?? 
                           'Pickup location not available';
+    final pickupLandmark = pickupLoc?['landmark']?.toString() ?? 'Pickup Location';
     
-    // Extract receiver location (where order is delivered TO)
+    // Extract receiver location
     final receiverLoc = json['reciverLocation'] as Map<String, dynamic>?;
     final deliveryAddress = receiverLoc?['formattedAddress']?.toString() ?? 
                             receiverLoc?['landmark']?.toString() ?? 
                             'Delivery location not available';
+    final deliveryLandmark = receiverLoc?['landmark']?.toString() ?? 'Delivery Location';
     
-    // Extract pickup member (customer who sends the order)
+    // Extract pickup member
     final pickupMember = json['pickUpMember'] as Map<String, dynamic>?;
     final customerName = pickupMember?['name']?.toString().isEmpty ?? true
         ? 'Customer'
@@ -91,7 +104,7 @@ class OrderModel {
         ? '$customerCountryCode $customerPhoneNumber'
         : 'Not available';
     
-    // Extract receiver member (person receiving the order)
+    // Extract receiver member
     final receiverMember = json['reciverMember'] as Map<String, dynamic>?;
     final receiverName = receiverMember?['name']?.toString().isEmpty ?? true
         ? 'Receiver'
@@ -105,8 +118,9 @@ class OrderModel {
     // Extract category details
     final category = json['category'] as Map<String, dynamic>?;
     final categoryName = category?['categoryName']?.toString() ?? 'Service';
+    final categoryId = category?['categoryId'] as int? ?? 0;
     
-    // Extract and parse details array into structured map
+    // Extract product details
     Map<String, List<String>> productDetailsMap = {};
     final details = json['details'] as List<dynamic>?;
     if (details != null && details.isNotEmpty) {
@@ -131,9 +145,12 @@ class OrderModel {
         .where((s) => s.isNotEmpty)
         .toList();
     
-    // Parse total amount
+    // Parse amounts
     final totalAmount = double.tryParse(json['totalAmount']?.toString() ?? '0') ?? 0.0;
     final paymentAmount = 'AED ${totalAmount.toStringAsFixed(2)}';
+    
+    // Extract invoice status ID
+    final invoiceStatusId = json['invoiceStatusId'] as int? ?? 0;
     
     return OrderModel(
       id: json['orderMasterId']?.toString() ?? '',
@@ -145,6 +162,8 @@ class OrderModel {
       pickupLocation: pickupAddress,
       deliveryLocation: deliveryAddress,
       deliveryType: json['serviceTypeName']?.toString() ?? 'Standard',
+      pickupLandmark: pickupLandmark,
+      deliveryLandmark: deliveryLandmark,
       customerName: customerName,
       customerPhone: customerPhone,
       customerAddress: pickupAddress,
@@ -160,10 +179,11 @@ class OrderModel {
       categoryName: categoryName,
       totalAmount: totalAmount,
       orderImages: orderImages,
+      invoiceStatusId: invoiceStatusId,
+      categoryId: categoryId,
     );
   }
 
-  // DEBUG METHOD - log all fields with their values
   void logDebugInfo() {
     log('\n========================================');
     log('ORDER MODEL DEBUG INFO');
@@ -173,13 +193,17 @@ class OrderModel {
     log('  ├─ ID: $id');
     log('  ├─ Tracking Number: $trackingNumber');
     log('  ├─ Status: $status');
+    log('  ├─ Invoice Status ID: ${invoiceStatusId ?? "null"}');
+    log('  ├─ Category ID: ${categoryId ?? "null"}');
     log('  ├─ Description: ${description ?? "null"}');
     log('  ├─ Order Date: ${orderDate ?? "null"}');
     log('  └─ Time: ${time ?? "null"}\n');
     
     log('📍 LOCATION INFO:');
     log('  ├─ Pickup Location: ${pickupLocation ?? "null"}');
+    log('  ├─ Pickup Landmark: ${pickupLandmark ?? "null"}');
     log('  ├─ Delivery Location: ${deliveryLocation ?? "null"}');
+    log('  ├─ Delivery Landmark: ${deliveryLandmark ?? "null"}');
     log('  └─ Delivery Type: ${deliveryType ?? "null"}\n');
     
     log('👤 CUSTOMER INFO (Pickup Member):');
@@ -227,9 +251,8 @@ class OrderModel {
     log('\n========================================\n');
   }
 
-  // Compact single-line debug log
   void logCompact() {
-    log('Order #$trackingNumber | Status: $status | Customer: $customerName | Amount: $paymentAmount');
+    log('Order #$trackingNumber | Status: $status | InvoiceStatus: ${invoiceStatusId ?? "N/A"} | Category: ${categoryId ?? "N/A"} | Customer: $customerName | Landmark: $deliveryLandmark | Amount: $paymentAmount');
   }
 
   Map<String, dynamic> toMap() {
@@ -242,6 +265,8 @@ class OrderModel {
       'pickupLocation': pickupLocation,
       'deliveryLocation': deliveryLocation,
       'deliveryType': deliveryType,
+      'pickupLandmark': pickupLandmark,
+      'deliveryLandmark': deliveryLandmark,
       'customerName': customerName,
       'customerPhone': customerPhone,
       'customerAddress': customerAddress,
@@ -257,15 +282,16 @@ class OrderModel {
       'categoryName': categoryName,
       'totalAmount': totalAmount,
       'orderImages': orderImages,
+      'invoiceStatusId': invoiceStatusId,
+      'categoryId': categoryId,
     };
   }
 }
 
-// Extension to log lists of orders
 extension OrderListDebug on List<OrderModel> {
   void logAllOrders() {
     log('\n========================================');
-    log('logING ${length} ORDERS');
+    log('LOGGING ${length} ORDERS');
     log('========================================\n');
     
     for (var i = 0; i < length; i++) {

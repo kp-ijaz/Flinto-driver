@@ -31,6 +31,8 @@ class OrderCard extends StatelessWidget {
           (o) => o.trackingNumber == trackingNumber,
           orElse: () => controller.orders.first,
         );
+        
+        // Navigate based on order status using the controller method
         controller.navigateToOrderDetails(order);
       },
       child: Container(

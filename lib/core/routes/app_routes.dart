@@ -59,21 +59,17 @@ class AppRoutes {
     ),
     GetPage(
       name: orderDetails,
-      page: () => const OrderDetailsScreen(), // Remove the args handling here
+      page: () => const OrderDetailsScreen(),
       transition: Transition.rightToLeft,
       transitionDuration: const Duration(milliseconds: 300),
     ),
     GetPage(
       name: productDelivery,
       page: () {
-        final args = Get.arguments as Map<String, dynamic>?; // Changed to dynamic
+        // Get the orderData map from arguments
+        final orderData = Get.arguments as Map<String, dynamic>?;
         return ProductDeliveryScreen(
-          trackingNumber: args?['trackingNumber']?.toString() ?? '',
-          pickupLocation: args?['pickupLocation']?.toString() ?? '',
-          deliveryLocation: args?['deliveryLocation']?.toString() ?? '',
-          deliveryType: args?['deliveryType']?.toString() ?? '',
-          date: args?['date']?.toString() ?? '',
-          time: args?['time']?.toString() ?? '',
+          orderData: orderData,
         );
       },
       transition: Transition.rightToLeft,

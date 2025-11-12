@@ -94,32 +94,80 @@ class HomeController extends GetxController {
   }
 
   void navigateToOrderDetails(OrderModel order) {
-    Get.toNamed(
-      '/order-details',
-      arguments: {
-        'trackingNumber': order.trackingNumber,
-        'status': order.status,
-        'orderDate': order.orderDate,
-        'pickupLocation': order.pickupLocation,
-        'deliveryLocation': order.deliveryLocation,
-        'deliveryType': order.deliveryType,
-        'customerName': order.customerName,
-        'customerPhone': order.customerPhone,
-        'customerAddress': order.customerAddress,
-        'receiverName': order.receiverName,
-        'receiverPhone': order.receiverPhone,
-        'receiverAddress': order.receiverAddress,
-        'paymentAmount': order.paymentAmount,
-        'paymentStatus': order.paymentStatus,
-        'paymentMethod': order.paymentMethod,
-        'productDetails': order.productDetails,
-        'time': order.time,
-        'serviceName': order.serviceName,
-        'categoryName': order.categoryName,
-        'totalAmount': order.totalAmount,
-        'orderImages': order.orderImages,
-      },
-    );
+    // 🔍 DEBUG: Log the invoiceStatusId and categoryId when tapping on order card
+    log('\n🎯 NAVIGATION DEBUG:');
+    log('═══════════════════════════════════════');
+    log('Order Tracking: ${order.trackingNumber}');
+    log('Invoice Status ID: ${order.invoiceStatusId ?? "NULL"}');
+    log('Category ID: ${order.categoryId ?? "NULL"}');
+    log('Order Status: ${order.status}');
+    log('═══════════════════════════════════════\n');
+
+    // Check if invoiceStatusId is 5, then navigate to ProductDeliveryScreen
+    if (order.invoiceStatusId == 5) {
+      log('✅ Navigating to ProductDeliveryScreen (Status ID: 5)');
+      Get.toNamed(
+        '/product-delivery',
+        arguments: {
+          'id': order.id,
+          'trackingNumber': order.trackingNumber,
+          'status': order.status,
+          'orderDate': order.orderDate,
+          'pickupLocation': order.pickupLocation,
+          'deliveryLocation': order.deliveryLocation,
+          'deliveryType': order.deliveryType,
+          'customerName': order.customerName,
+          'customerPhone': order.customerPhone,
+          'customerAddress': order.customerAddress,
+          'receiverName': order.receiverName,
+          'receiverPhone': order.receiverPhone,
+          'receiverAddress': order.receiverAddress,
+          'paymentAmount': order.paymentAmount,
+          'paymentStatus': order.paymentStatus,
+          'paymentMethod': order.paymentMethod,
+          'productDetails': order.productDetails,
+          'time': order.time,
+          'serviceName': order.serviceName,
+          'categoryName': order.categoryName,
+          'totalAmount': order.totalAmount,
+          'orderImages': order.orderImages,
+          'invoiceStatusId': order.invoiceStatusId,
+          'categoryId': order.categoryId,
+        },
+      );
+    } else {
+      // Otherwise navigate to OrderDetailsScreen
+      log('✅ Navigating to OrderDetailsScreen (Status ID: ${order.invoiceStatusId ?? "NULL"})');
+      Get.toNamed(
+        '/order-details',
+        arguments: {
+          'id': order.id,
+          'trackingNumber': order.trackingNumber,
+          'status': order.status,
+          'orderDate': order.orderDate,
+          'pickupLocation': order.pickupLocation,
+          'deliveryLocation': order.deliveryLocation,
+          'deliveryType': order.deliveryType,
+          'customerName': order.customerName,
+          'customerPhone': order.customerPhone,
+          'customerAddress': order.customerAddress,
+          'receiverName': order.receiverName,
+          'receiverPhone': order.receiverPhone,
+          'receiverAddress': order.receiverAddress,
+          'paymentAmount': order.paymentAmount,
+          'paymentStatus': order.paymentStatus,
+          'paymentMethod': order.paymentMethod,
+          'productDetails': order.productDetails,
+          'time': order.time,
+          'serviceName': order.serviceName,
+          'categoryName': order.categoryName,
+          'totalAmount': order.totalAmount,
+          'orderImages': order.orderImages,
+          'invoiceStatusId': order.invoiceStatusId,
+          'categoryId': order.categoryId,
+        },
+      );
+    }
   }
 
   void navigateToNotifications() {

@@ -1,3 +1,4 @@
+import 'package:flinto_driver/presentation/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -10,11 +11,13 @@ import 'presentation/controllers/location_controller.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
+  
   Get.put(AuthController(), permanent: true);
   Get.put(LocationController(), permanent: true);
+  Get.put(HomeController(), permanent: true); // Add this line
+  
   runApp(const MyApp());
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
