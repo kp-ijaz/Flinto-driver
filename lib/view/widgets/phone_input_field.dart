@@ -110,10 +110,10 @@ class _PhoneInputFieldState extends State<PhoneInputField> {
         if (widget.label.isNotEmpty)
           Text(
             widget.label,
-            style: const TextStyle(
+            style:  TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: AppColors.textPrimary,
+              color: AppColors.pending,
             ),
           ),
         if (widget.label.isNotEmpty) const SizedBox(height: 8),
@@ -128,7 +128,7 @@ class _PhoneInputFieldState extends State<PhoneInputField> {
           style: const TextStyle(fontSize: 14),
           decoration: InputDecoration(
             hintText: widget.hint,
-            hintStyle: const TextStyle(color: AppColors.textHint, fontSize: 14),
+            hintStyle: const TextStyle(color: AppColors.pending, fontSize: 14),
             prefixIcon: InkWell(
               onTap: _showCountryPicker,
               child: Padding(
@@ -143,13 +143,13 @@ class _PhoneInputFieldState extends State<PhoneInputField> {
                       style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textPrimary,
+                        color: AppColors.pending,
                       ),
                     ),
                     const Icon(
                       Icons.arrow_drop_down,
                       size: 18,
-                      color: AppColors.textSecondary,
+                      color: AppColors.pending,
                     ),
                   ],
                 ),
@@ -167,11 +167,11 @@ class _PhoneInputFieldState extends State<PhoneInputField> {
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(80),
-              borderSide: const BorderSide(color: AppColors.inputBorder),
+              borderSide: const BorderSide(color: AppColors.pending),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(80),
-              borderSide: const BorderSide(color: AppColors.inputBorder),
+              borderSide: const BorderSide(color: AppColors.pending),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(80),

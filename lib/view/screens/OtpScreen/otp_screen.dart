@@ -1,5 +1,6 @@
 import 'package:flinto_driver/core/constants/app_colors.dart';
 import 'package:flinto_driver/core/utils/responsive.dart';
+import 'package:flinto_driver/view/screens/HomeScreen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -43,7 +44,7 @@ class OtpScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: Responsive.sp(context, 24),
                   fontWeight: FontWeight.bold,
-                  color: AppColors.textPrimary,
+                  color: AppColors.pending,
                 ),
               ),
               SizedBox(height: Responsive.h(context, 10)),
@@ -79,12 +80,12 @@ class OtpScreen extends StatelessWidget {
                         counterText: "",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(color: Colors.grey),
+                          borderSide:  BorderSide(color: Colors.grey),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                            color: AppColors.textPrimary,
+                          borderSide:  BorderSide(
+                            color: AppColors.pending,
                             width: 2,
                           ),
                         ),
@@ -97,10 +98,10 @@ class OtpScreen extends StatelessWidget {
               SizedBox(height: Responsive.h(context, 30)),
               TextButton(
                 onPressed: () {},
-                child: const Text(
+                child:  Text(
                   "Didn't receive code? Resend",
                   style: TextStyle(
-                    color: AppColors.textPrimary,
+                    color: AppColors.pending,
                     decoration: TextDecoration.underline,
                   ),
                 ),
@@ -109,7 +110,16 @@ class OtpScreen extends StatelessWidget {
               SizedBox(
                 width: context.screenWidth * 0.7,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // Verify OTP logic here
+                    // For now, navigate to HomeScreen
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MyOrderScreen(),
+                      ),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20.0),
