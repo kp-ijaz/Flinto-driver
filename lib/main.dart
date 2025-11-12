@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
-import 'view/screens/loginScreen/login_screen.dart';
-// import 'view/screens/splashScreen/splash_screen.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
-void main() {
+import 'core/routes/app_routes.dart';
+import 'presentation/controllers/auth_controller.dart';
+import 'presentation/controllers/location_controller.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await GetStorage.init();
+  Get.put(AuthController(), permanent: true);
+  Get.put(LocationController(), permanent: true);
   runApp(const MyApp());
 }
 
@@ -11,13 +20,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flinto Driver',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: LoginScreen(),
+    return ScreenUtilInit(
+      designSize: const Size(375, 812),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) {
+        final authController = Get.find<AuthController>();
+        return GetMaterialApp(
+          title: 'Flinto Driver',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          ),
+          initialRoute:
+              authController.isLoggedIn ? AppRoutes.home : AppRoutes.login,
+          getPages: AppRoutes.getPages,
+          defaultTransition: Transition.rightToLeft,
+          transitionDuration: const Duration(milliseconds: 300),
+        );
+      },
     );
   }
 }

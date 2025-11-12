@@ -1,8 +1,8 @@
 import 'package:flinto_driver/core/constants/app_colors.dart';
-import 'package:flinto_driver/view/screens/HomeScreen/home_screen.dart';
-import 'package:flinto_driver/view/screens/ProfileScreen/profilescreen.dart';
-import 'package:flinto_driver/view/screens/ScheduleScreen/schedule_screen.dart';
+import 'package:flinto_driver/presentation/controllers/navigation_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 class CustomBottomNav extends StatelessWidget {
   final int currentIndex;
@@ -11,6 +11,21 @@ class CustomBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get or create navigation controller
+    NavigationController navController;
+    try {
+      navController = Get.find<NavigationController>();
+    } catch (e) {
+      navController = Get.put(NavigationController());
+    }
+    
+    // Update current index after build to avoid triggering setState during build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (currentIndex != navController.currentIndex.value) {
+        navController.setCurrentIndex(currentIndex);
+      }
+    });
+    
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -24,56 +39,31 @@ class CustomBottomNav extends StatelessWidget {
       ),
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _NavItem(
-                icon: Icons.calendar_today_outlined,
-                label: 'Schedule',
-                isSelected: currentIndex == 0,
-                onTap: () {
-                  if (currentIndex != 0) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ScheduleScreen(),
-                      ),
-                    );
-                  }
-                },
-              ),
-              _NavItem(
-                icon: Icons.home,
-                label: 'Home',
-                isSelected: currentIndex == 1,
-                onTap: () {
-                  if (currentIndex != 1) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MyOrderScreen(),
-                      ),
-                    );
-                  }
-                },
-              ),
-              _NavItem(
-                icon: Icons.person_outline,
-                label: 'Profile',
-                isSelected: currentIndex == 2,
-                onTap: () {
-                  if (currentIndex != 2) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ProfileScreen(),
-                      ),
-                    );
-                  }
-                },
-              ),
-            ],
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+          child: Obx(
+            () => Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _NavItem(
+                  icon: Icons.calendar_today_outlined,
+                  label: 'Schedule',
+                  isSelected: navController.currentIndex.value == 0,
+                  onTap: () => navController.changeIndex(0),
+                ),
+                _NavItem(
+                  icon: Icons.home,
+                  label: 'Home',
+                  isSelected: navController.currentIndex.value == 1,
+                  onTap: () => navController.changeIndex(1),
+                ),
+                _NavItem(
+                  icon: Icons.person_outline,
+                  label: 'Profile',
+                  isSelected: navController.currentIndex.value == 2,
+                  onTap: () => navController.changeIndex(2),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -97,32 +87,48 @@ class _NavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: isSelected ? AppColors.primary : Colors.transparent,
-              shape: BoxShape.circle,
+      onTap: () {
+        // Add haptic feedback for better UX
+        // HapticFeedback.lightImpact();
+        onTap();
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              padding: EdgeInsets.all(12.w),
+              decoration: BoxDecoration(
+                color: isSelected ? AppColors.primary : Colors.transparent,
+                shape: BoxShape.circle,
+              ),
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                child: Icon(
+                  icon,
+                  key: ValueKey('$icon-$isSelected'),
+                  color: isSelected ? Colors.white : AppColors.darkGrey,
+                  size: 24.sp,
+                ),
+              ),
             ),
-            child: Icon(
-              icon,
-              color: isSelected ? Colors.white : AppColors.darkGrey,
-              size: 24,
+            SizedBox(height: 4.h),
+            AnimatedDefaultTextStyle(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: isSelected ? AppColors.primary : AppColors.darkGrey,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+              ),
+              child: Text(label),
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              color: isSelected ? AppColors.primary : AppColors.darkGrey,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

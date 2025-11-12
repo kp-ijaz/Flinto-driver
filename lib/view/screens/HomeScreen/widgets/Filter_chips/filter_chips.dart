@@ -1,42 +1,27 @@
+import 'package:flinto_driver/core/constants/app_colors.dart';
+import 'package:flinto_driver/presentation/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
-// AppColors class (replace with your actual import)
-class AppColors {
-  static const Color black = Color.fromARGB(255, 0, 0, 0);
-  static const Color darkGrey = Color(0xFF9E9E9E);
-}
+class FilterChips extends StatelessWidget {
+  final Function(String) onFilterChanged;
 
-class FilterChips extends StatefulWidget {
-  const FilterChips({Key? key}) : super(key: key);
-
-  @override
-  State<FilterChips> createState() => _FilterChipsState();
-}
-
-class _FilterChipsState extends State<FilterChips> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  final List<String> filters = ['All', 'Pending', 'On Process', 'Delivered'];
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: filters.length, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
+  const FilterChips({
+    Key? key,
+    required this.onFilterChanged,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<HomeController>();
+    
     return Container(
-      height: 40,
-      margin: const EdgeInsets.symmetric(horizontal: 18),
+      height: 40.h,
+      margin: EdgeInsets.symmetric(horizontal: 18.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(25.r),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
@@ -45,27 +30,35 @@ class _FilterChipsState extends State<FilterChips> with SingleTickerProviderStat
           ),
         ],
       ),
-      child: TabBar(
-        controller: _tabController,
-        indicator: BoxDecoration(
-          color: AppColors.black,
-          borderRadius: BorderRadius.circular(25),
+      child: Obx(
+        () => Row(
+          children: controller.filters.map((filter) {
+            final isSelected = controller.selectedFilter.value == filter;
+            return Expanded(
+              child: GestureDetector(
+                onTap: () => onFilterChanged(filter),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  margin: EdgeInsets.all(2.w),
+                  decoration: BoxDecoration(
+                    color: isSelected ? AppColors.black : Colors.transparent,
+                    borderRadius: BorderRadius.circular(25.r),
+                  ),
+                  child: Center(
+                    child: Text(
+                      filter,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12.sp,
+                        color: isSelected ? Colors.white : AppColors.black,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
         ),
-        labelColor: Colors.white,
-        unselectedLabelColor: AppColors.black,
-        labelStyle: const TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 12,
-        ),
-        unselectedLabelStyle: const TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 12,
-        ),
-        indicatorSize: TabBarIndicatorSize.tab,
-        dividerColor: Colors.transparent,
-        labelPadding: EdgeInsets.zero, // ✅ Remove default padding
-        padding: EdgeInsets.zero, // ✅ Remove TabBar padding
-        tabs: filters.map((filter) => Tab(text: filter)).toList(),
       ),
     );
   }

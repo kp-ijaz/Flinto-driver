@@ -1,5 +1,7 @@
 import 'package:flinto_driver/view/screens/HomeScreen/widgets/bottomnavbar/bottom_nav_bar.dart';
+import 'package:flinto_driver/presentation/controllers/navigation_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({Key? key}) : super(key: key);
@@ -10,6 +12,19 @@ class ScheduleScreen extends StatefulWidget {
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
   DateTime selectedDate = DateTime(2023, 8, 27);
+  late NavigationController navController;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize navigation controller with schedule index
+    navController = Get.isRegistered<NavigationController>()
+        ? Get.find<NavigationController>()
+        : Get.put(NavigationController());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      navController.setCurrentIndex(0);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +197,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: const CustomBottomNav(currentIndex: 0,),
+      bottomNavigationBar: const CustomBottomNav(currentIndex: 0),
     );
   }
 }

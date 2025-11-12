@@ -1,8 +1,9 @@
 import 'package:flinto_driver/core/constants/app_colors.dart';
 import 'package:flinto_driver/core/utils/responsive.dart';
-import 'package:flinto_driver/view/screens/HomeScreen/home_screen.dart';
+import 'package:flinto_driver/presentation/controllers/otp_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
 class OtpScreen extends StatelessWidget {
   final String phoneNumber;
@@ -16,9 +17,8 @@ class OtpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<TextEditingController> otpControllers = List.generate(
-      4,
-      (index) => TextEditingController(),
+    final OtpController controller = Get.put(
+      OtpController(phoneNumber: phoneNumber, expectedOtp: receivedOtp),
     );
 
     return Scaffold(
@@ -49,14 +49,22 @@ class OtpScreen extends StatelessWidget {
               ),
               SizedBox(height: Responsive.h(context, 10)),
               Text(
-                "Please enter the 4-digit code sent to $phoneNumber\n(Test OTP: $receivedOtp)",
+                "Please enter the 4-digit code sent to $phoneNumber",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: Responsive.sp(context, 14),
                   color: Colors.grey[600],
                 ),
               ),
-              SizedBox(height: Responsive.h(context, 40)),
+              SizedBox(height: Responsive.h(context, 8)),
+              Text(
+                "Test OTP: ${controller.expectedOtp}",
+                style: TextStyle(
+                  fontSize: Responsive.sp(context, 13),
+                  color: Colors.grey[500],
+                ),
+              ),
+              SizedBox(height: Responsive.h(context, 32)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: List.generate(4, (index) {
@@ -64,10 +72,17 @@ class OtpScreen extends StatelessWidget {
                     width: Responsive.w(context, 60),
                     height: Responsive.h(context, 70),
                     child: TextField(
-                      controller: otpControllers[index],
+                      controller: controller.otpControllers[index],
                       textAlign: TextAlign.center,
                       keyboardType: TextInputType.number,
                       maxLength: 1,
+                      onChanged: (value) {
+                        if (value.length == 1 && index < 3) {
+                          FocusScope.of(context).nextFocus();
+                        } else if (value.isEmpty && index > 0) {
+                          FocusScope.of(context).previousFocus();
+                        }
+                      },
                       style: TextStyle(
                         fontSize: Responsive.sp(context, 32),
                         fontWeight: FontWeight.bold,
@@ -80,11 +95,11 @@ class OtpScreen extends StatelessWidget {
                         counterText: "",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide:  BorderSide(color: Colors.grey),
+                          borderSide: const BorderSide(color: Colors.grey),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide:  BorderSide(
+                          borderSide: const BorderSide(
                             color: AppColors.pending,
                             width: 2,
                           ),
@@ -97,8 +112,14 @@ class OtpScreen extends StatelessWidget {
               ),
               SizedBox(height: Responsive.h(context, 30)),
               TextButton(
-                onPressed: () {},
-                child:  Text(
+                onPressed: () {
+                  Get.snackbar(
+                    'OTP',
+                    'Please contact support to resend OTP.',
+                    snackPosition: SnackPosition.BOTTOM,
+                  );
+                },
+                child: Text(
                   "Didn't receive code? Resend",
                   style: TextStyle(
                     color: AppColors.pending,
@@ -107,28 +128,33 @@ class OtpScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: Responsive.h(context, 30)),
-              SizedBox(
-                width: context.screenWidth * 0.7,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Verify OTP logic here
-                    // For now, navigate to HomeScreen
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MyOrderScreen(),
+              Obx(
+                () => SizedBox(
+                  width: context.screenWidth * 0.7,
+                  child: ElevatedButton(
+                    onPressed: controller.isVerifying.value
+                        ? null
+                        : controller.verifyOtp,
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
                       ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
+                      padding: EdgeInsets.symmetric(
+                        vertical: Responsive.h(context, 15),
+                      ),
                     ),
-                    padding: EdgeInsets.symmetric(
-                      vertical: Responsive.h(context, 15),
-                    ),
+                    child: controller.isVerifying.value
+                        ? SizedBox(
+                            height: Responsive.h(context, 18),
+                            width: Responsive.h(context, 18),
+                            child: const CircularProgressIndicator(
+                              strokeWidth: 2.5,
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          )
+                        : const Text("Verify OTP"),
                   ),
-                  child: const Text("Verify OTP"),
                 ),
               ),
             ],

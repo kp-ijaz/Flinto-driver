@@ -1,5 +1,6 @@
-import 'package:flinto_driver/view/screens/ScheduleScreen/schedule_screen.dart';
+import 'package:flinto_driver/core/routes/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 // import 'package:flinto_driver/view/screens/OrderDetailsScreen/widgets/simple_appbar.dart';
 
 class ThankYouDeliveryScreen extends StatelessWidget {
@@ -97,8 +98,11 @@ class ThankYouDeliveryScreen extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          // Navigate back to schedule or home screen
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>ScheduleScreen()));
+                          // Navigate back to schedule screen using GetX
+                          Get.offAllNamed(
+                            AppRoutes.schedule,
+                            arguments: {'fromBottomNav': true},
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFFF6B6B),

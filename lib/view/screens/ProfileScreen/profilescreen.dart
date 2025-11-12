@@ -1,11 +1,21 @@
 import 'package:flinto_driver/view/screens/HomeScreen/widgets/bottomnavbar/bottom_nav_bar.dart';
+import 'package:flinto_driver/presentation/controllers/navigation_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Initialize navigation controller with profile index
+    final navController = Get.isRegistered<NavigationController>()
+        ? Get.find<NavigationController>()
+        : Get.put(NavigationController());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      navController.setCurrentIndex(2);
+    });
+    
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       body: SafeArea(
@@ -301,7 +311,7 @@ class ProfileScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const CustomBottomNav(),
+      bottomNavigationBar: const CustomBottomNav(currentIndex: 2),
     );
   }
 }

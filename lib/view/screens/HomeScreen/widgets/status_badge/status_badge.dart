@@ -1,6 +1,7 @@
 import 'package:flinto_driver/core/constants/app_colors.dart';
 import 'package:flinto_driver/core/constants/app_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class StatusBadge extends StatelessWidget {
   final String status;
@@ -28,15 +29,15 @@ class StatusBadge extends StatelessWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(25.r),
         border: Border.all(color: color, width: 1.5),
       ),
       child: Text(
         status,
-        style: AppTextStyles.statusLabel.copyWith(color: color),
+        style: AppTextStyles.statusLabel.copyWith(color: color, fontSize: 14.sp),
       ),
     );
   }
