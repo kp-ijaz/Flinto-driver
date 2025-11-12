@@ -610,7 +610,7 @@ void showTopSnackBar(BuildContext context, String message) {
 
                   const SizedBox(height: 20),
 
-                  const Padding(
+                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
                       'Product Details',

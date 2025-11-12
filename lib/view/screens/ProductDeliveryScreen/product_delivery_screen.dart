@@ -1,9 +1,9 @@
 import 'package:flinto_driver/core/constants/app_colors.dart';
-import 'package:flinto_driver/core/constants/app_text.dart';
+// import 'package:flinto_driver/core/constants/app_text.dart';
 import 'package:flinto_driver/view/screens/OrderDetailsScreen/widgets/simple_appbar.dart';
 import 'package:flinto_driver/view/screens/Thankyouscreen/thankyou_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart'; // Add this to pubspec.yaml
+// import 'package:google_maps_flutter/google_maps_flutter.dart'; // Add this to pubspec.yaml
 
 class ProductDeliveryScreen extends StatefulWidget {
   final String trackingNumber;

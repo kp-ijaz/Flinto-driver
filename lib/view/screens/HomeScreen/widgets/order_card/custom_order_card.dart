@@ -53,8 +53,8 @@ class OrderCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(trackingNumber, style: AppTextStyles.trackingNumber),
-                  const SizedBox(height: 4),
-                  const Text('Returned to sender', style: AppTextStyles.subtitle),
+                   SizedBox(height: 4),
+                   Text('Returned to sender', style: AppTextStyles.subtitle),
                 ],
               ),
             ),

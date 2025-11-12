@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'app_colors.dart';
+
 class AppText {
   // App Name
   static const String appName = 'Flinto';
@@ -118,4 +121,29 @@ class AppText {
   static const String termsOfService = 'Terms of service';
   static const String privacyPolicy = 'Privacy policy';
   static const String contactUs = 'Contact Us';
+}
+
+// Text Styles - For backward compatibility with old code
+class AppTextStyles {
+  static const TextStyle heading = TextStyle(
+    fontSize: 28,
+    fontWeight: FontWeight.bold,
+    color: Colors.white,
+  );
+  
+  static const TextStyle trackingNumber = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+    color: AppColors.darkGrey,
+  );
+  
+  static const TextStyle subtitle = TextStyle(
+    fontSize: 13,
+    color: Colors.grey,
+  );
+  
+  static const TextStyle statusLabel = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+  );
 }

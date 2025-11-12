@@ -1,6 +1,6 @@
 import 'package:flinto_driver/view/screens/ScheduleScreen/schedule_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flinto_driver/view/screens/OrderDetailsScreen/widgets/simple_appbar.dart';
+// import 'package:flinto_driver/view/screens/OrderDetailsScreen/widgets/simple_appbar.dart';
 
 class ThankYouDeliveryScreen extends StatelessWidget {
   const ThankYouDeliveryScreen({Key? key}) : super(key: key);
