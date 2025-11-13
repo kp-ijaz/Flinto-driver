@@ -18,6 +18,14 @@ class StatusBadge extends StatelessWidget {
         color = AppColors.delivered;
         bgColor = AppColors.delivered.withOpacity(0.1);
         break;
+       case 'service completed':
+        color = AppColors.delivered;
+        bgColor = AppColors.delivered.withOpacity(0.1);
+        break;  
+        case 'accepted':
+        color = AppColors.onProcess;
+        bgColor = AppColors.onProcess.withOpacity(0.1);
+        break;
       case 'on process':
         color = AppColors.onProcess;
         bgColor = AppColors.onProcess.withOpacity(0.1);
@@ -29,7 +37,7 @@ class StatusBadge extends StatelessWidget {
     }
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(25.r),
@@ -37,7 +45,7 @@ class StatusBadge extends StatelessWidget {
       ),
       child: Text(
         status,
-        style: AppTextStyles.statusLabel.copyWith(color: color, fontSize: 14.sp),
+        style: AppTextStyles.statusLabel.copyWith(color: color, fontSize: 12.sp),
       ),
     );
   }

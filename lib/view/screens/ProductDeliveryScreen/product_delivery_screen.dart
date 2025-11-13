@@ -1,11 +1,11 @@
 import 'dart:developer';
 import 'package:flinto_driver/core/constants/app_colors.dart';
-// import 'package:flinto_driver/core/constants/app_text.dart';
 import 'package:flinto_driver/data/repositories/order_status_api.dart';
 import 'package:flinto_driver/view/screens/DeliveryOtpScreen/delivery_otp_screen.dart';
 import 'package:flinto_driver/view/screens/OrderDetailsScreen/widgets/simple_appbar.dart';
 import 'package:flinto_driver/presentation/controllers/auth_controller.dart';
-// import 'package:flinto_driver/view/screens/delivery_otp_screen.dart'; // Import the new OTP screen
+import 'package:flinto_driver/view/screens/Thankyouscreen/thankyou_screen.dart';
+// import 'package:flinto_driver/view/screens/ThankYouScreen/thank_you_delivery_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -68,7 +68,7 @@ class _ProductDeliveryScreenState extends State<ProductDeliveryScreen> {
     
     // If it's a delivery (categoryId == 1), navigate to OTP screen
     if (categoryId == 1) {
-      log('🔐 Navigating to OTP screen for delivery verification');
+      log('🔐 Navigating to OTP screen for delivery verification (Category 1)');
       
       // Navigate to OTP screen and pass order data
       final result = await Get.to(
@@ -83,7 +83,9 @@ class _ProductDeliveryScreenState extends State<ProductDeliveryScreen> {
       return;
     }
     
-    // For End Service (categoryId != 1), complete directly without OTP
+    // For other categories (categoryId != 1), complete and navigate to Thank You screen
+    log('🎉 Processing service completion for Category $categoryId');
+    
     setState(() => isProcessing = true);
 
     try {
@@ -99,6 +101,7 @@ class _ProductDeliveryScreenState extends State<ProductDeliveryScreen> {
       log('🔄 Ending Service:');
       log('  Order Master ID: $orderMasterId');
       log('  Driver ID: $driverId');
+      log('  Category ID: $categoryId');
       log('  Status: Delivered');
       
       await _statusApi.updateOrderStatus(
@@ -114,26 +117,25 @@ class _ProductDeliveryScreenState extends State<ProductDeliveryScreen> {
 
       setState(() => isProcessing = false);
       
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Service completed successfully!'),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 2),
-        ),
+      // Navigate to Thank You screen for non-category-1 orders
+      Get.off(
+        () => const ThankYouDeliveryScreen(),
+        transition: Transition.fadeIn,
+        duration: const Duration(milliseconds: 300),
       );
-
-      Future.delayed(const Duration(seconds: 1), () {
-        if (mounted) {
-          Get.offAllNamed('/home');
-        }
-      });
+      
     } catch (e) {
       log('❌ Error ending service: $e');
       if (!mounted) return;
       
       setState(() => isProcessing = false);
-      Get.snackbar('Error', 'Failed to complete service: $e',
-          snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red);
+      Get.snackbar(
+        'Error',
+        'Failed to complete service: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     }
   }
 
@@ -166,7 +168,7 @@ class _ProductDeliveryScreenState extends State<ProductDeliveryScreen> {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          const SimpleAppBar(title: 'Flinto'),
+          const SimpleAppBar(showNotification: true,),
           Expanded(
             child: SingleChildScrollView(
               child: Column(

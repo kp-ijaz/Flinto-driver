@@ -18,7 +18,6 @@ class AuthController extends GetxController {
   String get pendingOtp => _pendingOtp.value;
   String get phoneNumber => _phoneNumber.value;
   bool get isLoggedIn => _driver.value != null;
-
   bool get hasPendingOtp => _pendingOtp.value.isNotEmpty;
 
   @override
@@ -87,4 +86,3 @@ class AuthController extends GetxController {
     }
   }
 }
-

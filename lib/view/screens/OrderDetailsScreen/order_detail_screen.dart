@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'package:flinto_driver/core/constants/app_colors.dart';
-import 'package:flinto_driver/core/constants/app_text.dart';
+// import 'package:flinto_driver/core/constants/app_text.dart';
 import 'package:flinto_driver/data/repositories/order_status_api.dart';
-import 'package:flinto_driver/view/screens/OrderDetailsScreen/widgets/info_row.dart';
+// import 'package:flinto_driver/view/screens/OrderDetailsScreen/widgets/info_row.dart';
 import 'package:flinto_driver/view/screens/OrderDetailsScreen/widgets/simple_appbar.dart';
 import 'package:flinto_driver/view/screens/ProductDeliveryScreen/product_delivery_screen.dart';
 import 'package:flinto_driver/presentation/controllers/auth_controller.dart';
@@ -617,7 +617,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          const SimpleAppBar(title: 'Flinto'),
+          const SimpleAppBar(showNotification: true,),
           Expanded(
             child: SingleChildScrollView(
               child: Column(

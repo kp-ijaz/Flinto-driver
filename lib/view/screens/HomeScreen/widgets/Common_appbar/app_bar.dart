@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 class CustomAppBar extends StatelessWidget {
   final String title;
   final bool showBackButton;
-  
+
   const CustomAppBar({
     Key? key,
     required this.title,
@@ -20,7 +20,7 @@ class CustomAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color.fromARGB(208, 224, 94, 14),
+        color: const Color(0xFFFF6453),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(30.r),
           bottomRight: Radius.circular(30.r),
@@ -36,6 +36,7 @@ class CustomAppBar extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // Menu or Back Button
                   if (showBackButton)
                     IconButton(
                       icon: Icon(Icons.arrow_back, color: Colors.white, size: 28.sp),
@@ -50,7 +51,28 @@ class CustomAppBar extends StatelessWidget {
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                     ),
-                  const Spacer(),
+                  
+                  // Logo Images in Center
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/images/logo white.png',
+                          height: 30.h,
+                          fit: BoxFit.contain,
+                        ),
+                        SizedBox(width: 8.w),
+                        Image.asset(
+                          'assets/images/text main.png',
+                          height: 25.h,
+                          fit: BoxFit.contain,
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  // Notification Icon
                   IconButton(
                     icon: Icon(Icons.notifications_outlined, color: Colors.white, size: 28.sp),
                     onPressed: () {

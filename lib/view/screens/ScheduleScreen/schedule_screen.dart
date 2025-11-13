@@ -1,5 +1,6 @@
 import 'package:flinto_driver/view/screens/HomeScreen/widgets/bottomnavbar/bottom_nav_bar.dart';
 import 'package:flinto_driver/presentation/controllers/navigation_controller.dart';
+import 'package:flinto_driver/view/screens/OrderDetailsScreen/widgets/simple_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -34,58 +35,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
         child: Column(
           children: [
             // App Bar
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              child: Row(
-                children: [
-                  // Logo
-                  Container(
-                    width: 36,
-                    height: 36,
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFFFF6B6B), Color(0xFFFF8A5B)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: const Icon(
-                      Icons.flight_takeoff_rounded,
-                      color: Colors.white,
-                      size: 20,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  const Text(
-                    'flinto',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      letterSpacing: -0.5,
-                    ),
-                  ),
-                  const Spacer(),
-                  // Notification Icon
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF8F8F8),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.notifications_outlined,
-                      color: Colors.black,
-                      size: 22,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            
+            const SimpleAppBar(showNotification: true,),
             // Schedule Header
             Container(
               color: Colors.white,

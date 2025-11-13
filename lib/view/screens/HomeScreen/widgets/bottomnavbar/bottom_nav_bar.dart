@@ -50,8 +50,8 @@ class CustomBottomNav extends StatelessWidget {
                   isSelected: navController.currentIndex.value == 0,
                   onTap: () => navController.changeIndex(0),
                 ),
-                _NavItem(
-                  icon: Icons.home,
+                _NavImageItem(
+                  imagePath: 'assets/images/logo white.png',
                   label: 'Home',
                   isSelected: navController.currentIndex.value == 1,
                   onTap: () => navController.changeIndex(1),
@@ -102,16 +102,16 @@ class _NavItem extends StatelessWidget {
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
               padding: EdgeInsets.all(12.w),
-              decoration: BoxDecoration(
-                color: isSelected ? AppColors.primary : Colors.transparent,
-                shape: BoxShape.circle,
-              ),
+              // decoration: BoxDecoration(
+              //   color: isSelected ? AppColors.primary : Colors.transparent,
+              //   shape: BoxShape.circle,
+              // ),
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 200),
                 child: Icon(
                   icon,
                   key: ValueKey('$icon-$isSelected'),
-                  color: isSelected ? Colors.white : AppColors.darkGrey,
+                  color: isSelected ? const Color(0xFFFF6453): AppColors.darkGrey,
                   size: 24.sp,
                 ),
               ),
@@ -123,6 +123,70 @@ class _NavItem extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12.sp,
                 color: isSelected ? AppColors.primary : AppColors.darkGrey,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+              ),
+              child: Text(label),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _NavImageItem extends StatelessWidget {
+  final String imagePath;
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _NavImageItem({
+    required this.imagePath,
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // Add haptic feedback for better UX
+        // HapticFeedback.lightImpact();
+        onTap();
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              padding: EdgeInsets.all(12.w),
+              decoration: BoxDecoration(
+                color: isSelected ? const Color(0xFFFF6453) : Colors.black,
+                shape: BoxShape.circle,
+              ),
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                child: Image.asset(
+                  imagePath,
+                  key: ValueKey('$imagePath-$isSelected'),
+                  width: 24.sp,
+                  height: 24.sp,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            SizedBox(height: 4.h),
+            AnimatedDefaultTextStyle(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: isSelected ? const Color(0xFFFF6453) : Colors.black,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               ),
               child: Text(label),

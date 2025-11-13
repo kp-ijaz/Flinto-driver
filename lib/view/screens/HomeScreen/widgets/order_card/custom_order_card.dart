@@ -60,12 +60,12 @@ class OrderCard extends StatelessWidget {
                 children: [
                   Text(
                     trackingNumber,
-                    style: AppTextStyles.trackingNumber.copyWith(fontSize: 16.sp),
+                    style: AppTextStyles.trackingNumber.copyWith(fontSize: 12.sp),
                   ),
                   SizedBox(height: 4.h),
                   Text(
                     orderDate ?? 'No date',
-                    style: AppTextStyles.subtitle.copyWith(fontSize: 13.sp),
+                    style: AppTextStyles.subtitle.copyWith(fontSize: 11.sp),
                   ),
                 ],
               ),

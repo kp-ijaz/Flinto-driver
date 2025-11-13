@@ -1,28 +1,44 @@
 import 'package:flinto_driver/view/screens/HomeScreen/widgets/bottomnavbar/bottom_nav_bar.dart';
 import 'package:flinto_driver/presentation/controllers/navigation_controller.dart';
+import 'package:flinto_driver/presentation/controllers/auth_controller.dart';
+import 'package:flinto_driver/view/screens/OrderDetailsScreen/widgets/simple_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
+  String _formatDate(DateTime? date) {
+    if (date == null) return 'N/A';
+    return DateFormat('MMM dd, yyyy').format(date);
+  }
+
+  String _formatPhoneNumber(String? countryCode, String? phone) {
+    if (countryCode == null || phone == null) return 'N/A';
+    return '$countryCode $phone';
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Initialize navigation controller with profile index
+    // Initialize controllers
     final navController = Get.isRegistered<NavigationController>()
         ? Get.find<NavigationController>()
         : Get.put(NavigationController());
+    
+    final authController = Get.find<AuthController>();
+    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       navController.setCurrentIndex(2);
     });
     
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
-            // App Bar
-           
+            const SimpleAppBar(showNotification: true),
+            
             // Accounts Header
             Container(
               color: Colors.white,
@@ -66,247 +82,266 @@ class ProfileScreen extends StatelessWidget {
 
             // Scrollable Content
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Stack(
-                            children: [
-                              Container(
-                                width: 110,
-                                height: 110,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: const DecorationImage(
-                                    image: NetworkImage(
-                                      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400',
-                                    ),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: Container(
-                                  width: 35,
-                                  height: 35,
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xFFFF6B6B),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(
-                                    Icons.camera_alt,
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          // Name
-                          const Text(
-                            'Mr. Rahim',
-                            style: TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                          SizedBox(height: 10,),
-                    // Profile Section
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16),
-                      padding: const EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Column(
+              child: Obx(() {
+                final driver = authController.driver;
+                
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      // Profile Image
+                      Stack(
                         children: [
-                          // Profile Image
-                          
-                          // const SizedBox(height: 20),
-                          // Info Items
-                          _InfoItem(
-                            label: 'Email:',
-                            value: 'Rahiminfo@gmail.com',
-                          ),
-                          const Divider(height: 20, color: Color(0xFFE0E0E0)),
-                          _InfoItem(
-                            label: 'Phone Number:',
-                            value: '+971 055 4876 687',
-                          ),
-                          const Divider(height: 20, color: Color(0xFFE0E0E0)),
-                          _InfoItem(
-                            label: 'ID:',
-                            value: '#RH123456',
-                          ),
-                          const Divider(height: 20, color: Color(0xFFE0E0E0)),
-                          _InfoItem(
-                            label: 'Joined Date:',
-                            value: 'Aug 03, 2023',
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 12),
-
-                    // Vehicle Details Section
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16),
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Vehicle Details',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                          Container(
+                            width: 110,
+                            height: 110,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.grey[200],
+                              image: driver?.driverPhoto != null
+                                  ? DecorationImage(
+                                      image: NetworkImage(driver!.driverPhoto!),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : null,
                             ),
+                            child: driver?.driverPhoto == null
+                                ? Icon(
+                                    Icons.person,
+                                    size: 50,
+                                    color: Colors.grey[400],
+                                  )
+                                : null,
                           ),
-                          const SizedBox(height: 10),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Vehicle Image
-                              Container(
-                                width: 90,
-                                height: 90,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  image: const DecorationImage(
-                                    image: NetworkImage(
-                                      'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=400',
-                                    ),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              // Vehicle Info
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'Toyota | Pickup Bak',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'License Number:',
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.grey[600],
-                                                ),
-                                              ),
-                                              const SizedBox(height: 4),
-                                              const Text(
-                                                'KA 05695',
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                'Plate Number:',
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.grey[600],
-                                                ),
-                                              ),
-                                              const SizedBox(height: 4),
-                                              const Text(
-                                                '3WPASS',
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      'Vehicle Detail:',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey[600],
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    const Text(
-                                      'A reliable and powerful utility vehicle designed for heavy loads and long hauls. Toyota\'s Pickup Bak combines durability...',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        color: Colors.black87,
-                                        height: 1.4,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20),
-                          // Know More Button
-                          Center(
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
                             child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 40,
-                                vertical: 12,
+                              width: 35,
+                              height: 35,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFFFF6B6B),
+                                shape: BoxShape.circle,
                               ),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFFF6B6B),
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                              child: const Text(
-                                'Know More',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
+                              child: const Icon(
+                                Icons.camera_alt,
+                                color: Colors.white,
+                                size: 20,
                               ),
                             ),
                           ),
                         ],
                       ),
-                    ),
+                      const SizedBox(height: 10),
+                      
+                      // Name
+                      Text(
+                        driver?.name ?? 'Driver Name',
+                        style: const TextStyle(
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      
+                      // Profile Information Section
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Column(
+                          children: [
+                            _InfoItem(
+                              label: 'Email:',
+                              value: driver?.email ?? 'N/A',
+                            ),
+                            const Divider(height: 20, color: Color(0xFFE0E0E0)),
+                            _InfoItem(
+                              label: 'Phone Number:',
+                              value: _formatPhoneNumber(
+                                driver?.countryCode,
+                                driver?.phoneNumber,
+                              ),
+                            ),
+                            const Divider(height: 20, color: Color(0xFFE0E0E0)),
+                            _InfoItem(
+                              label: 'Driver ID:',
+                              value: driver?.driverRegistrationId != null
+                                  ? '#DR${driver!.driverRegistrationId}'
+                                  : 'N/A',
+                            ),
+                            const Divider(height: 20, color: Color(0xFFE0E0E0)),
+                            _InfoItem(
+                              label: 'Joined Date:',
+                              value: _formatDate(driver?.updatedAt),
+                            ),
+                          ],
+                        ),
+                      ),
 
-                    const SizedBox(height: 10),
-                  ],
-                ),
-              ),
+                      const SizedBox(height: 12),
+
+                      // Vehicle Details Section
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Vehicle Details',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Vehicle Image
+                                Container(
+                                  width: 90,
+                                  height: 90,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: Colors.grey[200],
+                                    image: const DecorationImage(
+                                      image: NetworkImage(
+                                        'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=400',
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                
+                                // Vehicle Info
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        driver?.carType ?? 'Vehicle Type',
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'License Number:',
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.grey[600],
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                const Text(
+                                                  'KA 05695',
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Plate Number:',
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.grey[600],
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                const Text(
+                                                  '3WPASS',
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        'Vehicle Detail:',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      const Text(
+                                        'A reliable and powerful utility vehicle designed for heavy loads and long hauls.',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.black87,
+                                          height: 1.4,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+                            
+                            // Know More Button
+                            Center(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 40,
+                                  vertical: 12,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFFF6B6B),
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
+                                child: const Text(
+                                  'Know More',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 10),
+                    ],
+                  ),
+                );
+              }),
             ),
           ],
         ),
@@ -337,12 +372,15 @@ class _InfoItem extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-            color: Colors.black,
+        Expanded(
+          child: Text(
+            value,
+            style: const TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],
